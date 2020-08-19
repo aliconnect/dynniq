@@ -1,0 +1,21 @@
+{
+    "ws": {
+      "url": "wss://aliconnect.nl:444"
+    },
+    "http": {
+        "key": "cert/192.168.0.135.key",
+    	"cert": "cert/192.168.0.135.crt",
+        "port": 8080,
+        "port": 8443
+    },
+    "client_id": "5ebabb5e-0a5b-4c87-a970-1919a4680fb1",
+    "api": "lfv_Verkeerslichten_Verkeersbuis_api.json",
+    "data": "lfv_Verkeerslichten_Verkeersbuis_data.json",
+    "aud": 12345,
+    "src1": [
+        { "source": "sites/rws/lfv/root/Verkeerslichten.html", "dest": "root/Verkeerslichten.html" }
+    ],
+    "require1": {
+        "lfv_Verkeerslichten": "sites/rws/lfv/Verkeerslichten.js"
+    }
+}

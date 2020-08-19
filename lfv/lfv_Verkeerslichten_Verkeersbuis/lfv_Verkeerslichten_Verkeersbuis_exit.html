@@ -1,0 +1,201 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>RC Truck</title>
+	<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" /> -->
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="minimum-scale=1.0, width=device-width, maximum-scale=0.6667, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<link rel='apple-touch-icon' href='images/apple-touch-icon.png' />
+	<link rel='apple-touch-icon' sizes='76x76' href='images/apple-touch-icon.png' />
+	<link rel='apple-touch-icon' sizes='120x120' href='images/apple-touch-icon.png' />
+	<link rel='apple-touch-icon' sizes='152x152' href='images/apple-touch-icon.png' />
+	<link rel='apple-touch-startup-image' href='images/apple-touch-icon.png' />
+	<script src="js/qrcode.js"></script>
+	<style>
+		button {
+			display: block;
+			height: 50px;
+			width: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div id="elStatus">Connecting VKL...</div>
+	<div id="elQrcode"></div>
+	<script type="text/javascript">
+
+		window.WebSocket = window.WebSocket || window.MozWebSocket;
+
+		var get = {}, arr = document.location.search.substr(1).split('&').map(function (val) { val = val.split('='); get[val[0]] = val[1]; });
+		var wss_address = get.ws || (document.location.protocol == 'https:' ? 'wss://' : 'ws://') + document.location.host + (document.location.host == 'aliconnect.nl' ? ':444' : '');
+
+		console.log("GET", get, document.location, wss_address);
+
+		WebSocketClient = function (address) {
+			this.handlers = {open:[],connect:[],close:[],message:[],error:[]};
+			this.on = function(eventName, handler) {
+				this.handlers[eventName].push(handler);
+				return this;
+			};
+			this.address = address;
+			(this.connect = function () {
+				Object.assign(this.ws = new WebSocket(this.address),{
+					onopen : function () {
+						console.log(elStatus.innerText = 'You are connected',this);
+						this.handlers.open.forEach(function(handler){handler.call(this);}.bind(this));
+					}.bind(this),
+					onclose : function () {
+						console.log(elStatus.innerText = 'You are DISconnected');
+						setTimeout(this.connect.bind(this), 2000);
+						this.handlers.close.forEach(function(handler){handler.call(this);}.bind(this));
+					}.bind(this),
+					onerror : function (error) {
+						console.log(elStatus.innerText = 'Sorry, but there\'s some problem with your connection or the server is down.');
+						this.handlers.error.forEach(function(handler){handler.call(this);}.bind(this));
+					}.bind(this),
+					onmessage : function(message){
+						//console.log(message);
+						var data = JSON.parse(message.data);
+						if (data.sid) return this.handlers.connect.forEach(function(handler){handler.call(this,data);}.bind(this));
+						this.handlers.message.forEach(function(handler){handler.call(this,message.data);}.bind(this));
+					}.bind(this),
+				});
+			}).call(this);
+			this.request = function (param) {
+				this.ws.send(JSON.stringify(param));
+			};
+			return this;
+		}
+
+		//var ws = new WebSocketClient(wss_address);
+		http = {
+			request: function (par) {
+				var xhr = new XMLHttpRequest();
+				xhr.addEventListener('load', function (event) {
+					if (xhr.status < 400) console.log(`${xhr.method} ${xhr.src} ${xhr.status} (${xhr.statusText}) ${xhr.response.length} bytes`); // responseText is the server
+					console.log(this.responseText);
+				});
+				xhr.open(par.method, par.url, true);
+				xhr.onerror = function (event) { // only triggers if the request couldn't be made at all
+					console.log(`${this.method} ${this.src} ${this.status} ${this.statusText}: ${this.responseText}: ${this.response.length} bytes`); // responseText is the server
+				};
+				if (par.headers) for (var name in par.headers) xhr.setRequestHeader(name, par.headers[name]);
+				xhr.send(par.body);
+				return xhr;
+			}
+		}
+
+		$a = function (o) {
+			return Object.assign(o,{
+				appendTag: function (tagName, par) {
+					return $a(this.appendChild(Object.assign(document.createElement(tagName), par)));
+				}.bind(o),
+			});
+		}
+
+		// var scode = "fb7PBp_80eoLRvwHpOSdWrfX5VSGB5EuFgZtDzAPaZM";
+		// //console.log(scode, 29543 % 10000, 9543 % 10000);
+		//
+		// for (var i=0,c=1;i<scode.length;i++) {
+		// 	console.log(scode.charCodeAt(i), c, c = Number ( String( c * scode.charCodeAt(i) ).replace(/0/g,'') )  % 10000);
+		// }
+
+		var client_id = "5ebabb5e-0a5b-4c87-a970-1919a4680fb1", t = Math.round(new Date().valueOf()/1000);
+
+
+		var lfv_Verkeerslichten_Verkeersbuis_id = 1, ip_address = '192.168.0.135', ws_address = `wss://${ip_address}:8443`, http_address = `https://${ip_address}:8443`;
+		var wss = new WebSocketClient(ws_address)
+			.on("connect",function(data){
+				console.log(this,"LOCAL CONNECT",connect_data=data);
+				(function(){
+
+
+					//data.sid = btoa(data.sid);
+					sid = data.sid;
+
+					//code=btoa(JSON.stringify(data));
+					code=btoa(JSON.stringify(data)).replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
+					//code=btoa(client_id+'-'+data.sid}).replace(/=/g,'')
+					//code=btoa(JSON.stringify({client_id:client_id})).replace(/=/g,'')
+						;
+
+
+
+					console.log('CODE',code);
+					qrcode.makeCode(code);
+
+
+
+					//var signature = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256([header, payload].join('.'), String(client_secret || "").toUpperCase())).replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
+
+
+
+
+					//console.log(t, client_secret.split('-').map(function(val){var i = parseInt(val); console.log(val,i); return String(i)[0];}).join(''));
+					//setTimeout(arguments.callee,5000);
+				})()
+				console.log("connect",this);
+			})
+			.on("message",function(data){
+				console.log("message",data,this);
+			})
+		;
+
+		qrcode = new QRCode(document.getElementById("elQrcode"), {
+			width: 200,
+			height: 200,
+			//text: "5ebabb5e-0a5b-4c87-a970-1919a4680fb1",
+		});
+		$a(document.getElementById("elQrcode")).appendTag("form",{onsubmit:function() {
+
+			wss.request({
+				method:'get',url:'api/token('+this.code.value+')', onload:function(){
+					console.log(this.responseText);
+				}
+			});
+
+
+
+			// for (var i=0,c=1;i<scode.length;i++) {
+			// 	console.log(scode.charCodeAt(i), c, c = Number ( String( c * scode.charCodeAt(i) ).replace(/0/g,'') )  % 10000);
+			// }
+			//
+			//
+			// console.log(sid,this.code.value);
+
+
+
+
+			return false;
+		}}).appendTag("input",{name:"code", min:1, max:9999});
+
+
+
+		with ($a(document.body)) {
+			appendTag('h2', { innerText: http_address });
+			appendTag('button', { innerText: 'Rood', onclick: function () { http.request({ method: 'POST', body: JSON.stringify({test:1}), url: http_address + `/api/lfv_Verkeerslichten_Verkeersbuis(${lfv_Verkeerslichten_Verkeersbuis_id})/SetStand(rood)` }) } });
+			appendTag('button', { innerText: 'Groen', onclick: function () { http.request({ method: 'POST', body: 'TEST', url: http_address + `/api/lfv_Verkeerslichten_Verkeersbuis(${lfv_Verkeerslichten_Verkeersbuis_id})/SetStand(groen)` }) } });
+			appendTag('button', { innerText: 'Geel knipperen', onclick: function () { http.request({ method: 'POST', url: http_address + `/api/lfv_Verkeerslichten_Verkeersbuis(${lfv_Verkeerslichten_Verkeersbuis_id})/SetStand(geel_knipperen)` }) } });
+
+			appendTag('h2', { innerText: ws_address });
+			appendTag('button', { innerText: 'Rood', onclick: function () { wss.request({ method: 'POST', url: `/api/lfv_Verkeerslichten_Verkeersbuis(${lfv_Verkeerslichten_Verkeersbuis_id})/SetStand(rood)` }) } });
+			appendTag('button', { innerText: 'Groen', onclick: function () { wss.request({ method: 'POST', url: `/api/lfv_Verkeerslichten_Verkeersbuis(${lfv_Verkeerslichten_Verkeersbuis_id})/SetStand(groen)` }) } });
+			appendTag('button', { innerText: 'Geel knipperen', onclick: function () { wss.request({ method: 'POST', url: `/api/lfv_Verkeerslichten_Verkeersbuis(${lfv_Verkeerslichten_Verkeersbuis_id})/SetStand(geel_knipperen)` }) } });
+		}
+
+
+
+
+		// var wsc = new WebSocketClient("wss://aliconnect.nl:444");
+		// wsc.on("open",function(){
+		// 	console.log("CLOUD CONNECT");
+		// });
+	</script>
+
+</body>
+</html>

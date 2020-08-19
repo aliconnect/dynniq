@@ -1,0 +1,272 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>LFV VKL TEST</title>
+	<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" /> -->
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="minimum-scale=1.0, width=device-width, maximum-scale=0.6667, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<link rel='apple-touch-icon' href='images/apple-touch-icon.png' />
+	<link rel='apple-touch-icon' sizes='76x76' href='images/apple-touch-icon.png' />
+	<link rel='apple-touch-icon' sizes='120x120' href='images/apple-touch-icon.png' />
+	<link rel='apple-touch-icon' sizes='152x152' href='images/apple-touch-icon.png' />
+	<link rel='apple-touch-startup-image' href='images/apple-touch-icon.png' />
+	<script type="text/javascript" charset="UTF-8" src="node_modules/aim-server/js/inc/qrcode.js"></script>
+	<script type="text/javascript" charset="UTF-8" src="node_modules/aim-server/js/inc/crypto-js.js"></script>
+	<script type="text/javascript" charset="UTF-8" src="node_modules/aim-server/js/lib.js"></script>
+	<script type="text/javascript" charset="UTF-8" src="node_modules/aim-server/js/main.js"></script>
+	<script type="text/javascript">
+		// var pathname = "/lfv_Verkeerslichten_Verkeersbuis_test/sdfasdf(123)/asdfasdf";
+		//
+		// //var q = url.parse(req.url, true), pathname = q.pathname;
+		// var path = pathname.substr(1).split("/"), root = path.shift(), rootpath = "processroor/root", file_ext = ['.html', '/index.html', '/index.htm', '/README.md',''], rootpaths = [ rootpath + pathname , rootpath + "/" + root, "./node_modules/aim-control" ], files = [];
+		// rootpaths.forEach(function(path){file_ext.forEach(function(ext){files.push(path+ext);})});
+		// console.log(files);
+
+		aim.extend({
+			options: {
+				domain: {
+					name: 'aliconnect'
+				}
+			},
+			config: {
+				ws: {
+					url: "wss://192.168.0.135:8444",
+				}
+			},
+			operations: {
+				lfv_Verkeerslichten_Verkeersbuis_update: function (id, body) {
+					console.log("lfv_Verkeerslichten_Verkeersbuis_update", id, body);
+					document.body.style.backgroundColor = { rood: 'red', groen: 'green', geel: 'yellow', geel_knipperen: 'yellow', gedoofd: 'white' }[body.stand];
+					return { status: 200 };
+				}
+			},
+			api: {
+				"paths": {
+					"lfv_Verkeerslichten_Verkeersbuis(id)": {
+						"PATCH": {
+							"tags": [],
+							"summary": "",
+							"description": "Returns a single pet",
+							"operationId": "lfv_Verkeerslichten_Verkeersbuis_update",
+							"parameters": [
+								{ "name": "id", "in": "path", "description": "ID of Verkeerslichten Verkeersbuis", "required": true, "schema": { "type": "integer", "format": "int64" } },
+							],
+							"responses": {
+								"200": { "description": "Successful operation", "content": {} },
+								"400": { "description": "Invalid lfv_Verkeerslichten_Verkeersbuis ID supplied", "content": {} },
+								"404": { "description": "RIO Not Found", "content": {} }
+							},
+							"security": [
+								{
+									"api_key": []
+								}
+							]
+						}
+					}
+				}
+			},
+			on: {
+				connect: function(data){
+					console.log('CONNECT',data);
+					//qrcode.makeCode(data.sid);
+					//
+					// return;
+					// console.log(this,"LOCAL CONNECT",connect_data=data);
+					// (function(){
+					//
+					//
+					// 	//data.sid = btoa(data.sid);
+					// 	sid = data.sid;
+					//
+					// 	//code=btoa(JSON.stringify(data));
+					// 	code=btoa(JSON.stringify(data)).replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
+					// 	//code=btoa(client_id+'-'+data.sid}).replace(/=/g,'')
+					// 	//code=btoa(JSON.stringify({client_id:client_id})).replace(/=/g,'')
+					// 		;
+					//
+					//
+					//
+					// 	console.log('CODE',code);
+					// 	qrcode.makeCode(code);
+					//
+					//
+					//
+					// 	//var signature = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256([header, payload].join('.'), String(client_secret || "").toUpperCase())).replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
+					//
+					//
+					//
+					//
+					// 	//console.log(t, client_secret.split('-').map(function(val){var i = parseInt(val); console.log(val,i); return String(i)[0];}).join(''));
+					// 	//setTimeout(arguments.callee,5000);
+					// })()
+					// console.log("connect",this);
+				},
+				init: function () {
+
+
+ 					btnLogin.href = "https://login.aliconnect.nl/oauth2/?response_type=code&client_id=D1F8C3C7-7A1E-47F7-A316-86F2F6C90BFB&redirect_uri=" + document.location.origin + "/api&scope=email&state=12345657";
+
+					aim.access_token = aim.jwt_encode({aud: 12345},'12345');
+					qrcode = new QRCode(document.getElementById("elQrcode"), {
+						width: 200,
+						height: 200,
+						//text: "5ebabb5e-0a5b-4c87-a970-1919a4680fb1",
+					});
+					$a(document.getElementById("elQrcode")).appendTag("form",{onsubmit:function() {
+
+						wss.request({
+							method:'get',url:'api/token('+this.code.value+')', onload:function(){
+								console.log(this.responseText);
+							}
+						});
+
+
+
+						// for (var i=0,c=1;i<scode.length;i++) {
+						// 	console.log(scode.charCodeAt(i), c, c = Number ( String( c * scode.charCodeAt(i) ).replace(/0/g,'') )  % 10000);
+						// }
+						//
+						//
+						// console.log(sid,this.code.value);
+
+
+
+
+						return false;
+					}}).appendTag("input",{name:"code", min:1, max:9999});
+
+					aim.access_token = aim.jwt_encode({aud: 12345},'12345');
+
+					var lfv_Verkeerslichten_Verkeersbuis_id = 1, ip_address = '192.168.0.135', ws_address = document.location.hostname == 'aliconnect.nl' ?  'wss://aliconnect.nl:444' :  `wss://${ip_address}:8444`, http_address = `https://${ip_address}:8444`;
+					console.log('AANMAKEN BUTTONS',ws_address);
+
+					var onclick_ws = function(){
+						ws.request({ url: `/api/lfv_Verkeerslichten_Verkeersbuis(${lfv_Verkeerslichten_Verkeersbuis_id})/SetStand(${this.value})`, method: 'POST'  }, function(res) {
+							console.log('Response',res);
+						});
+					};
+
+					var elPanel = document.body;
+					with ($a(elPanel)) {
+						appendTag('h2', { innerText: document.location.origin });
+						appendTag('button', { innerText: 'Rood', onclick: function () { http.request({ url: document.location.origin + `/api/v1/lfv_Verkeerslichten_Verkeersbuis(${lfv_Verkeerslichten_Verkeersbuis_id})/SetStand(rood)`, method: 'POST', body: JSON.stringify({ test: 1 }), }) } });
+						appendTag('button', { innerText: 'Groen', onclick: function () { http.request({ url: document.location.origin + `/api/v1/lfv_Verkeerslichten_Verkeersbuis(${lfv_Verkeerslichten_Verkeersbuis_id})/SetStand(groen)`, method: 'POST', body: 'TEST',  }) } });
+						appendTag('button', { innerText: 'Geel knipperen', onclick: function () { http.request({ url: document.location.origin + `/api/v1/lfv_Verkeerslichten_Verkeersbuis(${lfv_Verkeerslichten_Verkeersbuis_id})/SetStand(geel_knipperen)`, method: 'POST' }) } });
+
+						appendTag('h2', { innerText: document.location.origin.replace('http','ws') });
+						appendTag('button', { innerText: 'Rood', value:'rood', onclick: onclick_ws });
+						appendTag('button', { innerText: 'Groen', value:'groen', onclick: onclick_ws });
+						appendTag('button', { innerText: 'Geel knipperen', value:'geel_knipperen', onclick: onclick_ws });
+						appendTag('button', { innerText: 'Gedoofd', value:'gedoofd', onclick: onclick_ws });
+					}
+
+
+					// http.request({ url: 'https://192.168.0.135:8443/api/lfv_Verkeerslichten_Verkeersbuis(1)', method: 'PATCH' }, function (res) {
+					// 	console.log('Result', res);
+					// })
+					//aim.api.request({ url: 'lfv_Verkeerslichten_Verkeersbuis(1)', method: 'PATCH' }, function (res) {
+					//	console.log('Result', res);
+					//})
+				},
+				open: function () {
+					console.log('ws open');
+					// ws.request({ url: 'lfv_Verkeerslichten_Verkeersbuis(1)', method: 'PATCH' }, function (res) {
+					// 	console.log('Result', res);
+					// })
+				},
+
+			}
+		});
+
+
+		aim.on('connect',function(){
+			console.log("JAAAA");
+		});
+
+		//window.WebSocket = window.WebSocket || window.MozWebSocket;
+
+		var get = {}, arr = document.location.search.substr(1).split('&').map(function (val) { val = val.split('='); get[val[0]] = val[1]; });
+		var wss_address = get.ws || (document.location.protocol == 'https:' ? 'wss://' : 'ws://') + document.location.host + (document.location.host == 'aliconnect.nl' ? ':444' : '');
+
+		console.log("GET", get, document.location, wss_address);
+
+
+		//var ws = new WebSocketClient(wss_address);
+
+		// var scode = "fb7PBp_80eoLRvwHpOSdWrfX5VSGB5EuFgZtDzAPaZM";
+		// //console.log(scode, 29543 % 10000, 9543 % 10000);
+		//
+		// for (var i=0,c=1;i<scode.length;i++) {
+		// 	console.log(scode.charCodeAt(i), c, c = Number ( String( c * scode.charCodeAt(i) ).replace(/0/g,'') )  % 10000);
+		// }
+
+		var client_id = "5ebabb5e-0a5b-4c87-a970-1919a4680fb1", t = Math.round(new Date().valueOf()/1000);
+
+
+		var lfv_Verkeerslichten_Verkeersbuis_id = 1, ip_address = '192.168.0.135', ws_address = `wss://${ip_address}:8443`, http_address = `https://${ip_address}:8443`;
+
+		// var wss = new WebSocketClient(ws_address)
+		// 	.on("connect",function(data){
+		// 		console.log(this,"LOCAL CONNECT",connect_data=data);
+		// 		(function(){
+		//
+		//
+		// 			//data.sid = btoa(data.sid);
+		// 			sid = data.sid;
+		//
+		// 			//code=btoa(JSON.stringify(data));
+		// 			code=btoa(JSON.stringify(data)).replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
+		// 			//code=btoa(client_id+'-'+data.sid}).replace(/=/g,'')
+		// 			//code=btoa(JSON.stringify({client_id:client_id})).replace(/=/g,'')
+		// 				;
+		//
+		//
+		//
+		// 			console.log('CODE',code);
+		// 			qrcode.makeCode(code);
+		//
+		//
+		//
+		// 			//var signature = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256([header, payload].join('.'), String(client_secret || "").toUpperCase())).replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '');
+		//
+		//
+		//
+		//
+		// 			//console.log(t, client_secret.split('-').map(function(val){var i = parseInt(val); console.log(val,i); return String(i)[0];}).join(''));
+		// 			//setTimeout(arguments.callee,5000);
+		// 		})()
+		// 		console.log("connect",this);
+		// 	})
+		// 	.on("message",function(data){
+		// 		//console.log("message",data,this);
+		// 	})
+		// ;
+
+
+
+
+		// var wsc = new WebSocketClient("wss://aliconnect.nl:444");
+		// wsc.on("open",function(){
+		// 	console.log("CLOUD CONNECT");
+		// });
+	</script>
+	<style>
+		button {
+			display: block;
+			height: 50px;
+			width: 100%;
+		}
+	</style>
+</head>
+<body>
+	<p><a id="btnLogin">LOGIN</a></p>
+	<div id="elStatus">Connecting VKL...</div>
+	<div id="elQrcode"></div>
+
+</body>
+</html>

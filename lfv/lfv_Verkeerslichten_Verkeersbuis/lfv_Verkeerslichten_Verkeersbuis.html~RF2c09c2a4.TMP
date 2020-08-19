@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>RC Truck</title>
+	<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" /> -->
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="minimum-scale=1.0, width=device-width, maximum-scale=0.6667, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<link rel='apple-touch-icon' href='images/apple-touch-icon.png' />
+	<link rel='apple-touch-icon' sizes='76x76' href='images/apple-touch-icon.png' />
+	<link rel='apple-touch-icon' sizes='120x120' href='images/apple-touch-icon.png' />
+	<link rel='apple-touch-icon' sizes='152x152' href='images/apple-touch-icon.png' />
+	<link rel='apple-touch-startup-image' href='images/apple-touch-icon.png' />
+
+	<style>
+		button{display:block;height:50px;width:100%;}
+	</style>
+</head>
+<body>
+	<div id="elStatus">Connecting VKL...</div>
+	<script type="text/javascript">
+		elStatus.innerText='sdafsdfasd';
+		window.WebSocket = window.WebSocket || window.MozWebSocket;
+
+		var get={}, arr=document.location.search.substr(1).split('&').map(function(val){val = val.split('=');get[val[0]]=val[1];});
+		var wss_address = get.ws || (document.location.protocol == 'https:' ? 'wss://' : 'ws://') + document.location.host + (document.location.host == 'aliconnect.nl' ? ':444' : '');
+
+		console.log("GET",get,document.location,wss_address);
+		WebSocketClient = function(address) {
+			this.address = address;
+			(this.connect = function() {
+				with (this.ws = new WebSocket(this.address)){
+					onopen = function () {
+						console.log(elStatus.innerText='You are connected');
+					};
+					onclose = function () {
+						console.log(elStatus.innerText='You are DISconnected');
+						setTimeout(this.connect.bind(this),2000);
+					}.bind(this);
+					onerror = function (error) {
+						console.log(elStatus.innerText='Sorry, but there\'s some problem with your connection or the server is down.');
+					};
+				}
+			}).call(this);
+			this.request = function(param){
+				this.ws.send(JSON.stringify(param));
+			};
+		}
+
+		//var ws = new WebSocketClient(wss_address);
+		http = {
+			request : function(par) {
+				var xhr = new XMLHttpRequest();
+				xhr.addEventListener('load', function (event) {
+					console.log(this.responseText);
+				});
+				xhr.open(par.method, par.url, true);
+				xhr.onerror = function (event) { // only triggers if the request couldn't be made at all
+					console.log(`${this.method} ${this.src} ${this.status} ${this.statusText}: ${this.responseText}: ${this.response.length} bytes`); // responseText is the server
+				};
+				if (par.headers) for (var name in par.headers) xhr.setRequestHeader(name, par.headers[name]);
+				xhr.send(par.body);
+				return xhr;
+			}
+		}
+
+		$a = function(o){
+			return {
+				appendElement: function(tagName,par){
+					return this.appendChild(Object.assign(document.createElement(tagName),par));
+				}.bind(o),
+			}
+		}
+
+		var id = 1, ip_address = '192.168.0.135', ws_address = `wss://${ip_address}:8443`, http_address = `https://${ip_address}:8443`;
+		var wss = new WebSocketClient(ws_address);
+		with ($a(document.body)) {
+			appendElement('h2',{innerText:http_address});
+			appendElement('button',{innerText:'Rood',onclick:function(){http.request({method:'GET', url:http_address + `/api/lfv_Verkeerslichten_Verkeersbuis(${id})/SetStand(rood)`})}});
+			appendElement('button',{innerText:'Groen',onclick:function(){http.request({method:'GET', url:http_address + `/api/lfv_Verkeerslichten_Verkeersbuis(${id})/SetStand(groen)`})}});
+			appendElement('button',{innerText:'Geel knipperen',onclick:function(){wss.request({method:'GET', url:http_address + `/api/lfv_Verkeerslichten_Verkeersbuis(${id})/SetStand(geel_knipperen)`})}});
+
+			appendElement('h2',{innerText:ws_address});
+			appendElement('button',{innerText:'Rood',onclick:function(){wss.request({method:'GET',url:`/api/lfv_Verkeerslichten_Verkeersbuis(${id})/SetStand(rood)`})}});
+			appendElement('button',{innerText:'Groen',onclick:function(){wss.request({method:'GET',url:`/api/lfv_Verkeerslichten_Verkeersbuis(${id})/SetStand(groen)`})}});
+			appendElement('button',{innerText:'Geel knipperen',onclick:function(){wss.request({method:'GET',url:`/api/lfv_Verkeerslichten_Verkeersbuis(${id})/SetStand(geel_knipperen)`})}});
+		}
+
+		//
+		//
+		// if (document.location.protocol == 'http:') {
+		// 	var ws_address = `wss://${ip_address}:8080`, http_address = `http://${ip_address}:8080`;
+		// 	var ws = new WebSocketClient(ws_address);
+		// 	with ($a(document.body)) {
+		// 		appendElement('h2',{innerText:http_address});
+		// 		appendElement('button',{innerText:'Rood',onclick:function(){http.request({method:'GET',url:http_address + `/api/lfv_Verkeerslichten_Verkeersbuis(${id})/SetStand(rood)`})}});
+		// 		appendElement('button',{innerText:'Groen',onclick:function(){http.request({method:'GET',url:http_address + `/api/lfv_Verkeerslichten_Verkeersbuis(${id})/SetStand(groen)`})}});
+		// 		appendElement('button',{innerText:'Geel knipperen',onclick:function(){wss.request({method:'GET',url:http_address + `/api/lfv_Verkeerslichten_Verkeersbuis(${id})/SetStand(geel_knipperen)`})}});
+		//
+		// 		appendElement('h2',{innerText:ws_address});
+		// 		appendElement('button',{innerText:'Rood',onclick:function(){wss.request({method:'GET',url:`/api/lfv_Verkeerslichten_Verkeersbuis(${id})/SetStand(rood)`})}});
+		// 		appendElement('button',{innerText:'Groen',onclick:function(){wss.request({method:'GET',url:`/api/lfv_Verkeerslichten_Verkeersbuis(${id})/SetStand(groen)`})}});
+		// 		appendElement('button',{innerText:'Geel knipperen',onclick:function(){wss.request({method:'GET',url:`/api/lfv_Verkeerslichten_Verkeersbuis(${id})/SetStand(geel_knipperen)`})}});
+		// 	}
+		// }
+		// var ws = new WebSocketClient("ws://192.168.0.135:8080");
+		// var wsc = new WebSocketClient("https://aliconnect.nl:444");
+	</script>
+
+</body>
+</html>
