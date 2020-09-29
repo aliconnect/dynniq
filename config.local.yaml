@@ -24,12 +24,6 @@ web:
   css:
     rules:
       .row.top.bar: background:linear-gradient(to right,#e6234b,#f07d00); color:white;
-docs:
-  index:
-    Develop:
-      Use the API's:
-        TMS:
-          href: /sites/schiphol/j2/webroot/api/acsm/README.md
 app:
   nav:
     items:
