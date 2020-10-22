@@ -3,7 +3,7 @@
 
 Ik ben ***Stefan***.
 
-![Foto Stefan](/images/foto_stefan.jpg)
+![Foto Stefan](images/foto_stefan.jpg)
 
 # Prive
 
