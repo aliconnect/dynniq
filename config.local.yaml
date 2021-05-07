@@ -1,6 +1,8 @@
+# DYNNIQ
+# client_id: DA6D0EBB-942E-4C5C-A18F-AB7E457A61F8
 info:
   title: Dynniq
-  description: .
+  description: Dynniq
   termsOfService: http://rws.aliconnect.nl/terms/
   contact:
     email: max.van.kampen@alicon.nl
@@ -8,18 +10,20 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
-config:
-  aim:
-    client_id: DA6D0EBB-942E-4C5C-A18F-AB7E457A61F8
-    scope:
-      - name
-      - email
-      - mobile
-    auth:
-      authorizationUrl: https://login.aliconnect.nl/api/oauth2
-      tokenUrl: https://login.aliconnect.nl/api/oauth2/token
-    websocket:
-      url: wss://aliconnect.nl:444
+scope:
+  - name
+  - email
+  - mobile
+ws:
+  url: wss://aliconnect.nl:444
+client:
+  servers:
+    - url: https://dynniq.aliconnect.nl/api
+    # authorizationUrl: https://login.aliconnect.nl/api/oauth2
+    # tokenUrl: https://login.aliconnect.nl/api/oauth2/token
+script:
+  src: https://aliconnect-dynniq.github.io/dynniq/js/client.js
+  src: https://aliconnect.nl/sites/dynniq/js/client.js
 css:
   .row.top.bar: background:linear-gradient(to right,#e6234b,#f07d00); color:white;
 definitions:
@@ -28,41 +32,233 @@ definitions:
     read: [default_auth: ['write:web','read:web']]
 components:
   schemas:
+    Schema:
+      properties:
+        File:
+          legend: Algemeen
+          format: files
+        Title:
+          legend: Content
+          title: Title
+          type: string
+          format: text
+        Children:
+          format: hidden
+          type: array
+        Master:
+          title: Onderdeel van
+          legend: Configuratie
+          schema: Website
+        Src:
+          title: Kopie van
+          legend: Configuratie
+          schema: Webpage
+        Inherit:
+          title: Afgeleid van
+          legend: Configuratie
+          schema: Webpage
+    Folder:
+      color: yellow
+      security: *basic_security
+      header:
+      - [Title]
+      - [Description]
+      - [BodyHTML]
+      properties: &FolderProperties
+        Name:
+          legend: Title
+          title: Name
+        Title:
+          title: Title
+        Tag:
+          title: Tag
+        Children:
+          format: hidden
+          type: array
+        Master:
+          title: Onderdeel van
+          legend: Configuratie
+          schema: Website
+        Src:
+          title: Kopie van
+          legend: Configuratie
+          schema: Webpage
+    Contact:
+      color: green
+      security: *basic_security
+      header:
+      - [GivenName,FirstName,MiddleName,Surname]
+      - [Department]
+      - [OfficeLocation]
+      properties:
+        state:
+          label: Account
+          type: radio
+          filter: 1
+          send: 1
+          title: Functie Status
+          hostID: 1
+          options:
+            offline:
+              title: Offline
+              color: rgb(130,130,130)
+            online:
+              title: Online
+              color: rgb(50,50,200)
+            focus:
+              title: Focus
+              color: rgb(50,50,200)
+        Fav:
+          title: Fav
+          type: hidden
+        Initials:
+          label: Contactpersoon
+          title: Initialen
+        GivenName:
+          title: Roepnaam
+        FirstName:
+          title: Voornamen volluit
+        MiddleName:
+          title: Tussenvoegsel
+        Surname:
+          title: Achternaam
+        Company:
+          label: Organisatie
+          title: Organisatie
+          classID: 1002
+          idname: masterID
+        CompanyName:
+          title: Organisatie naam
+        OfficeLocation:
+          title: Site/Vestiging
+        Department:
+          title: Afdeling
+          filter: 1
+          classID: 1007
+        Manager:
+          title: Manager
+          classID: 1004
+        AssistantName:
+          title: Assistent
+          hostID: 1
+          classID: 1004
+        JobTitle:
+          label: Functie
+          title: Functie titel
+          filter: 1
+        StartDateTime:
+          title: Start datum
+          type: date
+        FinishDateTime:
+          title: Eind datum
+          type: date
+        Arbeidsrelatie:
+          title: Contract
+          type: radio
+          filter: 1
+          options:
+            werknemer:
+              title: Werknemer
+              color: rgb(112,48,160)
+            interim:
+              title: Interim
+              color: rgb(112,48,160)
+            detachering:
+              title: Detachering
+              color: rgb(0,176,240)
+        BusinessPhones0:
+          label: Contactgegevens
+          title: Company Phone
+          type: tel
+          hostID: 1
+        BusinessHomePage:
+          title: Company Website
+          type: url
+          hostID: 1
+        EmailAddresses1Address:
+          title: Company Email
+          type: email
+          hostID: 1
+        MobilePhone1:
+          title: Contact Mobile
+          type: tel
+        BusinessPhones1:
+          title: Contact Phone
+          type: tel
+        EmailAddresses0Address:
+          title: Contact Email
+          type: email
+          rights: 3
+        BusinessAddress:
+          title: Vestigingsadres
+          type: address
+          location: true
+        OtherAddress:
+          title: Post adres
+          type: address
+        EmailAddresses2Address:
+          label: Priv\xE9 contactgegevens
+          title: Email
+          type: email
+          state: personal
+        HomePhones0:
+          title: Priv\xE9 mobiel
+          type: tel
+        HomePhones1:
+          title: Priv\xE9 telefoon
+          type: tel
+        SpouseName:
+          title: Partner naam
+        title:
+          title: Titel
+        Birthday:
+          title: Geboorte datum
+          type: date
+        HomeAddress:
+          title: Thuis adres
+          type: address
+        AfspraakDatum:
+          label: Planning
+          title: Volgend overleg
+          user: host
+          type: date
+        AfspraakTijd:
+          title: Starttijd
+          user: host
+          type: time
+        AfspraakOnderwerp:
+          title: Onderwerp
+          user: host
+          type: textarea
+        ResourceName:
+          label: Resource settings
+          title: Resource name
+          idname: keyname
+        ResourceType:
+          title: Resource type
+        ResourceAvail:
+          title: Beschikbaarheid
+          unit: FTE
+        ResourcePlan:
+          title: Planbaar
+          unit: FTE
+        verlof:
+          title: Verlof
+          type: textarea
+        Gebruiker:
+          label: Account
+          title: User
+          class: account
+          idname: toID
+        groupID:
+          title: Usergroup
+          type: text
+          class: groups
     Company:
       security: *basic_security
       properties:
-        State:
-          label: Organisation
-          title: State
-          type: radio
-          filter: 1
-          user: host
-          options:
-            customer:
-              title: Klant
-              color: rgba(0,255,0,1)
-            hot:
-              title: Hot
-              color: rgba(0,255,0,0.6)
-            warm:
-              title: Warm
-              color: rgba(0,255,0,0.2)
-            cold:
-              title: Cold
-              color: rgba(0,0,255,0.4)
-            frozen:
-              title: Frozen
-              color: rgba(0,0,255,0.6)
-            stopped:
-              title: Stopped
-              color: rgba(0,0,255,0.4)
-            old:
-              title: Old
-              color: rgba(0,0,255,0.2)
-            prospect:
-              title: Prospect
-              color: orange
         Keyname:
+          label: Organisatie
           title: Keyname
           idname: keyname
         Parent:
@@ -285,6 +481,36 @@ components:
           unit: k\u20AC
           readonly: 1
           filter: 1
+        DebState:
+          type: radio
+          filter: 1
+          title: State
+          user: host
+          options:
+            customer:
+              title: Klant
+              color: rgba(0,255,0,1)
+            hot:
+              title: Heet
+              color: rgba(0,255,0,0.6)
+            warm:
+              title: Warm
+              color: rgba(0,255,0,0.2)
+            cold:
+              title: Koud
+              color: rgba(0,0,255,0.4)
+            frozen:
+              title: IJskoud
+              color: rgba(0,0,255,0.6)
+            stopped:
+              title: Gestopt
+              color: rgba(0,0,255,0.4)
+            old:
+              title: Oud
+              color: rgba(0,0,255,0.2)
+            prospect:
+              title: Prospect
+              color: rgba(0,0,255,1)
         CredNr:
           label: Supplier
           title: Crediteur nummer
@@ -344,202 +570,8 @@ components:
           classID: 1004
         Cluster:
           title: Cluster
-        Product:
-          title: Products
-          type: array
-          schema: System
         Children:
           type: array
-    Contact:
-      security: *basic_security
-      btns:
-      - msg
-      - fav
-      - printmenu
-      files: []
-      title: Contactpersoon
-      listname: Contactpersoon
-      apps:
-        mobile: []
-      printmenu:
-        obs:
-          title: Organisation Breakdown Structure
-          post:
-            flds: FirstName,LastName
-      sort(a, b): |
-        return String(a.title).split(' ').pop().localeCompare(String(b.title).split(' ').pop());
-      row(row): |
-        var a = String(row.title).split(' '); a.push('<b>' + a.pop() + '</b>'); row.innerHTML = a.join(' '); //row.findstr = accentsTidy(row.title);
-      header:
-      - [GivenName,FirstName,MiddleName,Surname]
-      - [Department]
-      - [OfficeLocation]
-      properties:
-        State:
-          label: Account
-          type: radio
-          filter: 1
-          send: 1
-          title: Functie Status
-          hostID: 1
-          options:
-            offline:
-              title: Offline
-              color: rgb(130,130,130)
-            online:
-              title: Online
-              color: rgb(50,50,200)
-            focus:
-              title: Focus
-              color: rgb(50,50,200)
-        Fav:
-          title: Fav
-          type: hidden
-        Initials:
-          label: Contactperson
-          title: Initials
-        GivenName:
-          title: GivenName
-        FirstName:
-          title: FirstName
-        MiddleName:
-          title: MiddleName
-        Surname:
-          title: Surname
-        Company:
-          label: Company
-          title: Company
-          schema: Company
-          idname: masterID
-        CompanyName:
-          title: CompanyName
-        OfficeLocation:
-          title: OfficeLocation
-        Department:
-          title: Afdeling
-          filter: 1
-          schema: Department
-        Manager:
-          title: Manager
-          schema: Contact
-        Assistant:
-          title: Assistant
-          hostID: 1
-          schema: Contact
-        JobTitle:
-          label: Job
-          title: JobTitle
-          filter: 1
-        StartDateTime:
-          title: StartDateTime
-          type: date
-        FinishDateTime:
-          title: FinishDateTime
-          type: date
-        Arbeidsrelatie:
-          title: Contract
-          type: radio
-          filter: 1
-          options:
-            werknemer:
-              title: Werknemer
-              color: rgb(112,48,160)
-            interim:
-              title: Interim
-              color: rgb(112,48,160)
-            detachering:
-              title: Detachering
-              color: rgb(0,176,240)
-        BusinessPhones0:
-          label: Contactgegevens
-          title: Company Phone
-          type: tel
-          hostID: 1
-        BusinessHomePage:
-          title: Company Website
-          type: url
-          hostID: 1
-        EmailAddresses1Address:
-          title: Company Email
-          type: email
-          hostID: 1
-        MobilePhone1:
-          title: Contact Mobile
-          type: tel
-        BusinessPhones1:
-          title: Contact Phone
-          type: tel
-        EmailAddresses0Address:
-          title: Contact Email
-          type: email
-          rights: 3
-        BusinessAddress:
-          title: BusinessAddress
-          type: address
-          location: true
-        OtherAddress:
-          title: Post adres
-          type: address
-        EmailAddresses2Address:
-          label: Privé contactgegevens
-          title: EmailAddresses2Address
-          type: email
-          state: personal
-        HomePhones0:
-          title: HomePhones0
-          type: tel
-        HomePhones1:
-          title: HomePhones1
-          type: tel
-        SpouseName:
-          title: SpouseName
-        Birthday:
-          title: Birthday
-          type: date
-        HomeAddress:
-          title: HomeAddress
-          type: address
-        AfspraakDatum:
-          label: Planning
-          title: Volgend overleg
-          user: host
-          type: date
-        AfspraakTijd:
-          title: Starttijd
-          user: host
-          type: time
-        AfspraakOnderwerp:
-          title: Onderwerp
-          user: host
-          type: textarea
-        ResourceName:
-          label: Resource settings
-          title: Resource name
-          idname: keyname
-        ResourceType:
-          title: Resource type
-        ResourceAvail:
-          title: Beschikbaarheid
-          unit: FTE
-        ResourcePlan:
-          title: Planbaar
-          unit: FTE
-        verlof:
-          title: Verlof
-          type: textarea
-        Gebruiker:
-          label: Account
-          title: User
-          class: account
-          idname: toID
-        groupID:
-          title: Usergroup
-          type: text
-          class: groups
-        Product:
-          title: Products
-          type: array
-          schema: System
     Website:
       btns:
       - edit
