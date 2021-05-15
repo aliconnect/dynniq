@@ -2,6 +2,11 @@
 
 Welkom op Aliconnect Dynniq
 
+Meer informatie vindt u op:
+-  [Alicon](../alicon)
+-  [Aliconnect](../../api)
+
+
 Wij zijn systeem integrator van
 -  [QNode](/aliconnect/qnode) | [Wiki](/aliconnect/qnode/wiki) | [Github](https://aliconnect.github.io/qnode) | [Wiki](https://github.com/aliconnect/qnode?type=wiki)
 -  [TMS](/aliconnect/tms) | [Wiki](/aliconnect/tms/wiki) | [Github](https://aliconnect.github.io/tms) | [Wiki](https://github.com/aliconnect/tms?type=wiki)
