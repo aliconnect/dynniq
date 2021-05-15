@@ -3,6 +3,7 @@
 Welkom op Aliconnect Dynniq
 
 Meer informatie vindt u op:
+-  [Dynniq](../../../../aliconnect/dynniq) | [Wiki](../../../../aliconnect/dynniq/wiki) | [Github](https://aliconnect.github.io/dynniq) | [Wiki](https://github.com/aliconnect/dynniq?type=wiki)
 -  [Aliconnect](../../../../aliconnect/api) | [Wiki](../../../../aliconnect/api/wiki) | [Github](https://aliconnect.github.io/api) | [Wiki](https://github.com/aliconnect/api?type=wiki)
 -  [Alicon](../../../../aliconnect/alicon) | [Wiki](../../../../aliconnect/alicon/wiki) | [Github](https://aliconnect.github.io/alicon) | [Wiki](https://github.com/aliconnect/alicon?type=wiki)
 -  [SourceForce](../../../../aliconnect/sourceforce) | [Wiki](../../../../aliconnect/sourceforce/wiki) | [Github](https://aliconnect.github.io/sourceforce) | [Wiki](https://github.com/aliconnect/sourceforce?type=wiki)
