@@ -3,7 +3,7 @@
 Welkom op Aliconnect Dynniq
 
 Meer informatie vindt u op:
--  [Alicon](../../../alicon)
+-  [Alicon](../../../../aliconnect/alicon)
 -  [Aliconnect](../../api)
 
 
