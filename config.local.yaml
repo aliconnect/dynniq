@@ -21,20 +21,18 @@ client:
     - url: https://dynniq.aliconnect.nl/api
     # authorizationUrl: https://login.aliconnect.nl/api/oauth2
     # tokenUrl: https://login.aliconnect.nl/api/oauth2/token
-script:
-  src: https://aliconnect-dynniq.github.io/dynniq/js/client.js
-  src: https://aliconnect.nl/sites/dynniq/js/client.js
 css:
   .row.top.bar: background:linear-gradient(to right,#e6234b,#f07d00); color:white;
-site:
-  rootPath: https://raw.githubusercontent.com/aliconnect/dynniq/main
-  wikiPath: https://raw.githubusercontent.com/wiki/aliconnect/dynniq
-  rootPath: https://aliconnect.nl/sites/dynniq
-  wikiPath: https://aliconnect.nl/sites/dynniq/wiki
-  sidebar: _Sidebar.md
-  footer: _Footer.md
-  home: https://raw.githubusercontent.com/aliconnect/dynniq/main/README.md
-  home: https://aliconnect.nl/sites/dynniq/wiki/README.md
+ref:
+  script: https://aliconnect.github.io/dynniq/js/client.js
+  script: https://aliconnect.nl/sites/dynniq/js/client.js
+  # wikiPath: https://raw.githubusercontent.com/wiki/aliconnect/dynniq
+  # rootPath: https://aliconnect.nl/sites/dynniq
+  # sidebar: _Sidebar.md
+  # footer: _Footer.md
+  wiki: https://aliconnect.nl/sites/dynniq/wiki
+  home: https://aliconnect.nl/sites/dynniq
+  home: https://aliconnect.github.io/dynniq
 definitions:
   security: &basic_security
     write:  [default_auth: ['write:web']]
