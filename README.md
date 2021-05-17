@@ -2,7 +2,7 @@
 
 Welkom op Aliconnect Dynniq
 
-- [Home](/)
+- [Home](https://aliconnect.github.io/dynniq)  [Wiki](https://github.com/aliconnect/dynniq/wiki?type=wiki)
 
 ### Reference
 - [Aliconnect](https://aliconnect.github.io/aliconnect) [Wiki](https://github.com/aliconnect/aliconnect/wiki?type=wiki)
