@@ -33,7 +33,8 @@ site:
   wikiPath: https://aliconnect.nl/sites/dynniq/wiki
   sidebar: _Sidebar.md
   footer: _Footer.md
-  home: README.md
+  home: https://raw.githubusercontent.com/aliconnect/dynniq/main/README.md
+  home: https://aliconnect.nl/sites/dynniq/wiki/README.md
 definitions:
   security: &basic_security
     write:  [default_auth: ['write:web']]
