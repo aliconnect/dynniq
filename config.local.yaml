@@ -26,13 +26,10 @@ css:
 ref:
   script: https://aliconnect.github.io/dynniq/js/client.js
   script: https://aliconnect.nl/sites/dynniq/js/client.js
-  # wikiPath: https://raw.githubusercontent.com/wiki/aliconnect/dynniq
-  # rootPath: https://aliconnect.nl/sites/dynniq
-  # sidebar: _Sidebar.md
-  # footer: _Footer.md
-  wiki: https://aliconnect.nl/sites/dynniq/wiki
   home: https://aliconnect.nl/sites/dynniq
   home: https://aliconnect.github.io/dynniq
+  wiki: https://aliconnect.nl/sites/dynniq/wiki
+  wiki: https://github.com/aliconnect/dynniq/wiki
 definitions:
   security: &basic_security
     write:  [default_auth: ['write:web']]
